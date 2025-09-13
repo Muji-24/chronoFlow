@@ -809,8 +809,11 @@
             noteEl.className = `sticky-note ${note.color}`;
             noteEl.dataset.id = noteId;
             
+            // Format the content to preserve line breaks
+            const formattedContent = note.content.replace(/\n/g, '<br>');
+            
             noteEl.innerHTML = `
-                <div class="sticky-note-content">${note.content}</div>
+                <div class="sticky-note-content">${formattedContent}</div>
                 <div class="sticky-note-actions">
                     <button class="sticky-note-btn" onclick="editStickyNote('${noteId}')"><i class="fas fa-edit"></i></button>
                     <button class="sticky-note-btn" onclick="deleteStickyNote('${noteId}')"><i class="fas fa-trash"></i></button>
