@@ -242,6 +242,7 @@
             border-radius: 50px;
             backdrop-filter: blur(10px);
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
         .color-option {
@@ -302,6 +303,24 @@
             transform: translateX(0);
         }
 
+        /* Mobile color picker button */
+        .mobile-color-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #a55eea, #8854d0);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(136, 84, 208, 0.5);
+            z-index: 101;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .notes-container {
                 grid-template-columns: 1fr;
@@ -314,6 +333,29 @@
             
             .controls {
                 width: 100%;
+                justify-content: center;
+            }
+            
+            .color-options {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 90%;
+                bottom: 90px;
+                border-radius: 20px;
+                padding: 10px;
+                transform: translateX(-50%) scale(0);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+            
+            .color-options.expanded {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+            
+            .mobile-color-toggle {
+                display: flex;
+                align-items: center;
                 justify-content: center;
             }
         }
@@ -408,6 +450,10 @@
         <div class="color-options" id="colorOptions">
             <!-- Color options will be added here dynamically -->
         </div>
+        
+        <button class="mobile-color-toggle" id="mobileColorToggle">
+            <i class="fas fa-palette"></i>
+        </button>
 
         <div class="notification" id="notification">
             <span id="notificationText"></span>
@@ -439,6 +485,7 @@
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const colorOptions = document.getElementById('colorOptions');
+        const mobileColorToggle = document.getElementById('mobileColorToggle');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
 
@@ -454,6 +501,7 @@
         let currentLayout = 'grid';
         let notes = [];
         let draggedNote = null;
+        let selectedNoteId = null;
 
         // Initialize the app
         function init() {
@@ -480,11 +528,26 @@
             searchBtn.addEventListener('click', searchNotes);
             searchInput.addEventListener('input', searchNotes);
             
+            // Mobile color picker toggle
+            mobileColorToggle.addEventListener('click', toggleColorPicker);
+            
+            // Close color picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!colorOptions.contains(e.target) && e.target !== mobileColorToggle) {
+                    colorOptions.classList.remove('expanded');
+                }
+            });
+            
             // Drag and drop events
             notesContainer.addEventListener('dragstart', handleDragStart);
             notesContainer.addEventListener('dragend', handleDragEnd);
             notesContainer.addEventListener('dragover', handleDragOver);
             notesContainer.addEventListener('drop', handleDrop);
+        }
+
+        // Toggle color picker on mobile
+        function toggleColorPicker() {
+            colorOptions.classList.toggle('expanded');
         }
 
         // Create color options
@@ -494,7 +557,13 @@
                 colorOption.className = `color-option ${colorClass}`;
                 colorOption.setAttribute('data-color', colorClass);
                 colorOption.addEventListener('click', () => {
-                    changeNoteColor(colorClass);
+                    if (selectedNoteId) {
+                        changeSpecificNoteColor(selectedNoteId, colorClass);
+                    }
+                    // On mobile, close the color picker after selection
+                    if (window.innerWidth <= 768) {
+                        colorOptions.classList.remove('expanded');
+                    }
                 });
                 colorOptions.appendChild(colorOption);
             });
@@ -515,16 +584,6 @@
             renderNotes();
             saveNotesToFirebase();
             showNotification('New note created!');
-        }
-
-        // Change note color
-        function changeNoteColor(colorClass) {
-            if (notes.length === 0) return;
-            
-            // Apply to first note for demo, in real app you'd have a selected note
-            notes[0].color = colorClass;
-            renderNotes();
-            saveNotesToFirebase();
         }
 
         // Change layout
@@ -598,9 +657,15 @@
             // Change note color
             document.querySelectorAll('[data-action="color"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const noteId = e.currentTarget.getAttribute('data-id');
-                    const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
-                    changeSpecificNoteColor(noteId, randomColor);
+                    selectedNoteId = e.currentTarget.getAttribute('data-id');
+                    // On mobile, show the color picker
+                    if (window.innerWidth <= 768) {
+                        colorOptions.classList.add('expanded');
+                    } else {
+                        // On desktop, assign a random color immediately
+                        const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
+                        changeSpecificNoteColor(selectedNoteId, randomColor);
+                    }
                 });
             });
             
@@ -634,8 +699,10 @@
             const note = notes.find(note => note.id === noteId);
             if (note) {
                 note.color = colorClass;
+                note.date = new Date().toLocaleString();
                 renderNotes();
                 saveNotesToFirebase();
+                showNotification('Note color changed!');
             }
         }
 
