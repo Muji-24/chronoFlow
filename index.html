@@ -3,24 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowTasks - Weekly Planner</title>
+    <title>Neon Notes - Sticky Notes App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root {
-            --primary: #7E57C2;
-            --secondary: #5C6BC0;
-            --accent: #26A69A;
-            --dark: #2A2A3C;
-            --light: hsl(231, 51%, 15%);
-            --success: #66BB6A;
-            --warning: #FFA726;
-            --gray: #242430;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --gradient-bg: linear-gradient(135deg, #7E57C2 0%, #5C6BC0 50%, #26A69A 100%);
-            --gradient-secondary: linear-gradient(135deg, #FF7DAA 0%, #FFB74D 100%);
-            --gradient-accent: linear-gradient(135deg, #26A69A 0%, #66BB6A 100%);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -29,577 +16,403 @@
         }
 
         body {
-            background: var(--light);
-            color: var(--dark);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
             min-height: 100vh;
             padding: 20px;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(126, 87, 194, 0.1) 0%, transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(33, 150, 243, 0.1) 0%, transparent 25%);
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
             margin-bottom: 30px;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: var(--gradient-bg);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .subtitle {
-            color: var(--gray);
-            font-size: 1rem;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 992px) {
-            .main-content {
-                grid-template-columns: 2fr 1fr;
-            }
-        }
-
-        .week-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-            padding: 15px 20px;
-            background: var(--card-bg);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .week-range {
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 1.1rem;
-        }
-
-        .nav-btn {
-            background: var(--gradient-bg);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
+        .logo {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(126, 87, 194, 0.3);
-        }
-
-        .nav-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(126, 87, 194, 0.4);
-        }
-
-        .progress-container {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .progress-title {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .progress-percentage {
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .progress-bar {
-            height: 10px;
-            background: #eee;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background: var(--gradient-bg);
-            border-radius: 5px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
-            margin-bottom: 30px;
         }
 
-        .day {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease;
+        .logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45aaf2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .day:hover {
-            transform: translateY(-5px);
+        .logo i {
+            font-size: 2.8rem;
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
         }
 
-        .day-header {
-            text-align: center;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .day-name {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .date {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        .tasks {
-            min-height: 150px;
-        }
-
-        .task {
-            background: white;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        .controls {
             display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .task:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .task input[type="checkbox"] {
-            margin-right: 10px;
-            accent-color: var(--success);
-        }
-
-        .task-content {
-            flex: 1;
-        }
-
-        .task-title {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-
-        .task-time {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-
-        .completed {
-            text-decoration: line-through;
-            opacity: 0.7;
-        }
-
-        .add-task {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .add-task h2 {
-            margin-bottom: 15px;
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--dark);
-            font-weight: 500;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            background: white;
-            font-size: 1rem;
+            gap: 15px;
         }
 
         button {
-            background: var(--gradient-bg);
-            color: white;
-            border: none;
             padding: 12px 20px;
-            border-radius: 10px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #45aaf2, #3867d6);
+            color: white;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(126, 87, 194, 0.3);
+            box-shadow: 0 4px 15px rgba(56, 103, 214, 0.4);
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(126, 87, 194, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 103, 214, 0.6);
         }
 
-        .sticky-notes-container {
-            background: var(--card-bg);
+        button.add-note {
+            background: linear-gradient(45deg, #26de81, #20bf6b);
+            box-shadow: 0 4px 15px rgba(32, 191, 107, 0.4);
+        }
+
+        button.add-note:hover {
+            box-shadow: 0 6px 20px rgba(32, 191, 107, 0.6);
+        }
+
+        button.sync {
+            background: linear-gradient(45deg, #fd9644, #fa8231);
+            box-shadow: 0 4px 15px rgba(250, 130, 49, 0.4);
+        }
+
+        button.sync:hover {
+            box-shadow: 0 6px 20px rgba(250, 130, 49, 0.6);
+        }
+
+        .layout-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .layout-btn {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .layout-btn.active {
+            background: linear-gradient(45deg, #a55eea, #8854d0);
+        }
+
+        .notes-container {
+            display: grid;
+            gap: 25px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-layout {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .list-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .note {
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            margin-bottom: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: grab;
+            position: relative;
+            overflow: hidden;
         }
 
-        .sticky-notes-header {
+        .note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #fc5c7d, #6a82fb);
+        }
+
+        .note:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .note-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .sticky-notes-title {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 1.2rem;
+        .note-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 8px;
+            width: 80%;
+            border: none;
+            color: white;
         }
 
-        .sticky-notes {
-            display: grid;
-            gap: 15px;
-        }
-
-        .sticky-note {
-            padding: 15px;
-            border-radius: 10px;
-            min-height: 150px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            position: relative;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-      
-        .sticky-note.yellow {
-            background: linear-gradient(135deg, #FFF9C4 0%, #FFEB3B 100%);
-            color: #5D4037;
-        }
-
-        .sticky-note.blue {
-            background: linear-gradient(135deg, #B3E5FC 0%, #03A9F4 100%);
-            color: #01579B;
-        }
-
-        .sticky-note.green {
-            background: linear-gradient(135deg, #C8E6C9 0%, #4CAF50 100%);
-            color: #1B5E20;
-        }
-
-        .sticky-note.pink {
-            background: linear-gradient(135deg, #F8BBD0 0%, #E91E63 100%);
-            color: #880E4F;
-        }
-
-        .sticky-note-content {
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .sticky-note-actions {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        .note-actions {
             display: flex;
             gap: 10px;
         }
 
-        .sticky-note-btn {
-            background: rgba(0, 0, 0, 0.829);
+        .note-action {
+            background: rgba(255, 255, 255, 0.1);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .note-action:hover {
+            transform: scale(1.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .note-content {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
             border: none;
+            resize: none;
+            color: white;
+            margin-bottom: 15px;
+            min-height: 150px;
+        }
+
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .note-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .note-color {
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            font-size: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
-        .add-note-btn {
-            margin-top: 15px;
-            background: var(--gradient-accent);
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
+        .color-options {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             cursor: pointer;
-            color: var(--gray);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
         }
 
-        .task-details h3 {
-            margin-bottom: 15px;
-            color: var(--primary);
-            font-size: 1.5rem;
+        .color-option:hover {
+            transform: scale(1.2);
         }
 
-        .task-info {
-            margin-bottom: 15px;
-        }
-
-        .task-info div {
-            margin-bottom: 8px;
+        .search-container {
             display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
         }
 
-        .task-info strong {
-            min-width: 80px;
-            color: var(--dark);
-        }
-
-        .task-actions {
+        .search-box {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
         }
 
-        .btn-delete {
-            background: var(--gradient-secondary);
+        .search-box input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-box button {
+            border-radius: 0 50px 50px 0;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #26de81, #20bf6b);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(32, 191, 107, 0.4);
+            transform: translateX(100vw);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
         }
 
         @media (max-width: 768px) {
-            .calendar {
+            .notes-container {
                 grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: center;
             }
         }
 
-        /* Animation for tasks */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Different note colors */
+        .note-color-1 { background: linear-gradient(135deg, #fc5c7d, #6a82fb); }
+        .note-color-2 { background: linear-gradient(135deg, #c2e59c, #64b3f4); }
+        .note-color-3 { background: linear-gradient(135deg, #ff758c, #ff7eb3); }
+        .note-color-4 { background: linear-gradient(135deg, #7f00ff, #e100ff); }
+        .note-color-5 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+        .note-color-6 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+        .note-color-7 { background: linear-gradient(135deg, #f6d365, #fda085); }
+        .note-color-8 { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
+        .note-color-9 { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+        .note-color-10 { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
+
+        /* Animation for new notes */
+        @keyframes noteAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
         }
 
-        .task {
-            animation: fadeIn 0.3s ease;
+        .new-note {
+            animation: noteAppear 0.5s ease;
         }
 
-        /* Priority indicators */
-        .priority-high {
-            border-left: 4px solid var(--warning);
+        /* Pulse animation for sync */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        .priority-medium {
-            border-left: 4px solid var(--accent);
+        .pulse {
+            animation: pulse 0.5s ease;
         }
 
-        .priority-low {
-            border-left: 4px solid var(--success);
+        /* Drag and drop styles */
+        .dragging {
+            opacity: 0.7;
+            transform: rotate(5deg);
         }
 
-        /* Loading animation */
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(126, 87, 194, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .drag-over {
+            border: 2px dashed rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>FlowTasks</h1>
-            <p class="subtitle">Your modern weekly task manager with sticky notes</p>
+            <div class="logo">
+                <i class="fas fa-sticky-note"></i>
+                <h1>Neon Notes</h1>
+            </div>
+            <div class="controls">
+                <button class="add-note" id="addNote">
+                    <i class="fas fa-plus"></i> Add Note
+                </button>
+                <button class="sync" id="syncNotes">
+                    <i class="fas fa-sync-alt"></i> Sync
+                </button>
+            </div>
         </header>
 
-        <div class="week-navigation">
-            <button class="nav-btn" id="prev-week"><i class="fas fa-chevron-left"></i></button>
-            <div class="week-range" id="week-range">June 10 - June 16, 2023</div>
-            <button class="nav-btn" id="next-week"><i class="fas fa-chevron-right"></i></button>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-header">
-                <div class="progress-title">Weekly Progress</div>
-                <div class="progress-percentage" id="progress-percentage">0%</div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress" id="weekly-progress"></div>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search notes...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="left-column">
-                <div class="add-task">
-                    <h2>Add New Task</h2>
-                    <div class="form-group">
-                        <label for="task-title">Task Title</label>
-                        <input type="text" id="task-title" placeholder="What do you need to do?">
-                    </div>
-                    <div class="form-group">
-                        <label for="task-day">Day</label>
-                        <select id="task-day">
-                            <option value="0">Monday</option>
-                            <option value="1">Tuesday</option>
-                            <option value="2">Wednesday</option>
-                            <option value="3">Thursday</option>
-                            <option value="4">Friday</option>
-                            <option value="5">Saturday</option>
-                            <option value="6">Sunday</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-time">Time</label>
-                        <input type="time" id="task-time">
-                    </div>
-                    <div class="form-group">
-                        <label for="task-priority">Priority</label>
-                        <select id="task-priority">
-                            <option value="high">High</option>
-                            <option value="medium">Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-desc">Description (optional)</label>
-                        <textarea id="task-desc" rows="2" placeholder="Add details about your task"></textarea>
-                    </div>
-                    <button id="add-task-btn">Add Task</button>
-                </div>
-
-                <div class="calendar">
-                    <!-- Days will be generated by JavaScript -->
-                </div>
-            </div>
-
-            <div class="right-column">
-                <div class="sticky-notes-container">
-                    <div class="sticky-notes-header">
-                        <div class="sticky-notes-title">Sticky Notes</div>
-                        <button class="nav-btn" id="add-note-btn"><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div class="sticky-notes" id="sticky-notes">
-                        <!-- Sticky notes will be generated by JavaScript -->
-                    </div>
-                </div>
-            </div>
+        <div class="layout-controls">
+            <button class="layout-btn active" data-layout="grid">
+                <i class="fas fa-th-large"></i> Grid
+            </button>
+            <button class="layout-btn" data-layout="list">
+                <i class="fas fa-list"></i> List
+            </button>
         </div>
 
-        <!-- Task Detail Modal -->
-        <div class="modal" id="task-modal">
-            <div class="modal-content">
-                <span class="close-modal">&times;</span>
-                <div class="task-details">
-                    <h3 id="modal-task-title">Task Title</h3>
-                    <div class="task-info">
-                        <div><strong>Date:</strong> <span id="modal-task-date">Monday, Jun 12</span></div>
-                        <div><strong>Time:</strong> <span id="modal-task-time">10:00 AM</span></div>
-                        <div><strong>Priority:</strong> <span id="modal-task-priority">High</span></div>
-                        <div><strong>Status:</strong> <span id="modal-task-status">Pending</span></div>
-                        <div><strong>Description:</strong> <span id="modal-task-desc">No description provided</span></div>
-                    </div>
-                    <div class="task-actions">
-                        <button id="toggle-complete-btn">Mark Complete</button>
-                        <button class="btn-delete" id="delete-task-btn">Delete Task</button>
-                    </div>
-                </div>
-            </div>
+        <div class="notes-container grid-layout" id="notesContainer">
+            <!-- Notes will be added here dynamically -->
+        </div>
+
+        <div class="color-options" id="colorOptions">
+            <!-- Color options will be added here dynamically -->
+        </div>
+
+        <div class="notification" id="notification">
+            <span id="notificationText"></span>
         </div>
     </div>
-
-    <!-- Firebase App (core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <!-- Firebase Database -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         // Firebase configuration
@@ -618,356 +431,342 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Current week tracking
-        let currentWeekStart = new Date();
-        currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1); // Start from Monday
-
         // DOM elements
-        const calendarEl = document.querySelector('.calendar');
-        const weekRangeEl = document.getElementById('week-range');
-        const prevWeekBtn = document.getElementById('prev-week');
-        const nextWeekBtn = document.getElementById('next-week');
-        const addTaskBtn = document.getElementById('add-task-btn');
-        const addNoteBtn = document.getElementById('add-note-btn');
-        const modal = document.getElementById('task-modal');
-        const closeModal = document.querySelector('.close-modal');
-        const toggleCompleteBtn = document.getElementById('toggle-complete-btn');
-        const deleteTaskBtn = document.getElementById('delete-task-btn');
-        const progressBar = document.getElementById('weekly-progress');
-        const progressPercentage = document.getElementById('progress-percentage');
-        const stickyNotesContainer = document.getElementById('sticky-notes');
+        const notesContainer = document.getElementById('notesContainer');
+        const addNoteBtn = document.getElementById('addNote');
+        const syncNotesBtn = document.getElementById('syncNotes');
+        const layoutBtns = document.querySelectorAll('.layout-btn');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const colorOptions = document.getElementById('colorOptions');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
 
-        // Current task being viewed in modal
-        let currentTaskId = null;
-        let currentTaskDay = null;
+        // Note colors
+        const noteColors = [
+            'note-color-1', 'note-color-2', 'note-color-3', 
+            'note-color-4', 'note-color-5', 'note-color-6',
+            'note-color-7', 'note-color-8', 'note-color-9',
+            'note-color-10'
+        ];
 
-        // Format date as "Mon, Jun 12"
-        function formatDate(date) {
-            const options = { weekday: 'short', month: 'short', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
+        // Current state
+        let currentLayout = 'grid';
+        let notes = [];
+        let draggedNote = null;
+
+        // Initialize the app
+        function init() {
+            createColorOptions();
+            loadNotesFromFirebase();
+            setupEventListeners();
         }
 
-        // Format date for display "June 10 - June 16, 2023"
-        function getWeekRangeString(startDate) {
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
+        // Set up event listeners
+        function setupEventListeners() {
+            addNoteBtn.addEventListener('click', createNewNote);
+            syncNotesBtn.addEventListener('click', syncNotesWithFirebase);
             
-            const startMonth = startDate.toLocaleString('default', { month: 'long' });
-            const endMonth = endDate.toLocaleString('default', { month: 'long' });
-            const year = startDate.getFullYear();
-            
-            if (startMonth === endMonth) {
-                return `${startMonth} ${startDate.getDate()} - ${endDate.getDate()}, ${year}`;
-            } else {
-                return `${startMonth} ${startDate.getDate()} - ${endMonth} ${endDate.getDate()}, ${year}`;
-            }
-        }
-
-        // Generate days for the current week
-        function generateCalendar() {
-            calendarEl.innerHTML = '';
-            weekRangeEl.textContent = getWeekRangeString(currentWeekStart);
-            
-            for (let i = 0; i < 7; i++) {
-                const dayDate = new Date(currentWeekStart);
-                dayDate.setDate(currentWeekStart.getDate() + i);
-                
-                const dayEl = document.createElement('div');
-                dayEl.className = 'day';
-                dayEl.dataset.date = dayDate.toISOString().split('T')[0];
-                
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                
-                const dayName = document.createElement('div');
-                dayName.className = 'day-name';
-                dayName.textContent = dayDate.toLocaleDateString('en-US', { weekday: 'long' });
-                
-                const date = document.createElement('div');
-                date.className = 'date';
-                date.textContent = formatDate(dayDate);
-                
-                dayHeader.appendChild(dayName);
-                dayHeader.appendChild(date);
-                
-                const tasksEl = document.createElement('div');
-                tasksEl.className = 'tasks';
-                tasksEl.id = `day-${i}-tasks`;
-                
-                dayEl.appendChild(dayHeader);
-                dayEl.appendChild(tasksEl);
-                
-                calendarEl.appendChild(dayEl);
-            }
-            
-            loadTasks();
-            loadStickyNotes();
-        }
-
-        // Load tasks from Firebase
-        function loadTasks() {
-            const weekStartStr = currentWeekStart.toISOString().split('T')[0];
-            const tasksRef = database.ref('tasks/' + weekStartStr);
-            
-            tasksRef.on('value', (snapshot) => {
-                clearAllTasks();
-                
-                const tasks = snapshot.val();
-                let totalTasks = 0;
-                let completedTasks = 0;
-                
-                if (tasks) {
-                    Object.keys(tasks).forEach(taskId => {
-                        const task = tasks[taskId];
-                        addTaskToUI(task, taskId);
-                        
-                        totalTasks++;
-                        if (task.completed) {
-                            completedTasks++;
-                        }
-                    });
-                }
-                
-                // Update progress bar
-                const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-                progressBar.style.width = `${progress}%`;
-                progressPercentage.textContent = `${Math.round(progress)}%`;
-            });
-        }
-
-        // Clear all tasks from UI
-        function clearAllTasks() {
-            for (let i = 0; i < 7; i++) {
-                const tasksEl = document.getElementById(`day-${i}-tasks`);
-                tasksEl.innerHTML = '';
-            }
-        }
-
-        // Add task to UI
-        function addTaskToUI(task, taskId) {
-            const tasksEl = document.getElementById(`day-${task.day}-tasks`);
-            const taskEl = document.createElement('div');
-            taskEl.className = `task priority-${task.priority}`;
-            taskEl.dataset.id = taskId;
-            
-            taskEl.innerHTML = `
-                <input type="checkbox" ${task.completed ? 'checked' : ''}>
-                <div class="task-content ${task.completed ? 'completed' : ''}">
-                    <div class="task-title">${task.title}</div>
-                    <div class="task-time">${task.time}</div>
-                </div>
-                <i class="fas fa-grip-vertical" style="color: var(--gray);"></i>
-            `;
-            
-            tasksEl.appendChild(taskEl);
-            
-            // Add event listener for checkbox
-            const checkbox = taskEl.querySelector('input[type="checkbox"]');
-            checkbox.addEventListener('change', (e) => {
-                e.stopPropagation(); // Prevent triggering the task click event
-                const taskContent = taskEl.querySelector('.task-content');
-                taskContent.classList.toggle('completed');
-                
-                // Update task in Firebase
-                const weekStartStr = currentWeekStart.toISOString().split('T')[0];
-                database.ref('tasks/' + weekStartStr + '/' + taskId).update({
-                    completed: checkbox.checked
-                });
-            });
-            
-            // Add event listener for task click (to open modal)
-            taskEl.addEventListener('click', (e) => {
-                if (e.target !== checkbox) {
-                    openTaskModal(task, taskId);
-                }
-            });
-        }
-
-        // Load sticky notes from Firebase
-        function loadStickyNotes() {
-            const notesRef = database.ref('stickyNotes');
-            
-            notesRef.on('value', (snapshot) => {
-                stickyNotesContainer.innerHTML = '';
-                
-                const notes = snapshot.val();
-                if (notes) {
-                    Object.keys(notes).forEach(noteId => {
-                        const note = notes[noteId];
-                        addStickyNoteToUI(note, noteId);
-                    });
-                }
-            });
-        }
-
-        // Add sticky note to UI
-        function addStickyNoteToUI(note, noteId) {
-            const noteEl = document.createElement('div');
-            noteEl.className = `sticky-note ${note.color}`;
-            noteEl.dataset.id = noteId;
-            
-            // Format the content to preserve line breaks
-            const formattedContent = note.content.replace(/\n/g, '<br>');
-            
-            noteEl.innerHTML = `
-                <div class="sticky-note-content">${formattedContent}</div>
-                <div class="sticky-note-actions">
-                    <button class="sticky-note-btn" onclick="editStickyNote('${noteId}')"><i class="fas fa-edit"></i></button>
-                    <button class="sticky-note-btn" onclick="deleteStickyNote('${noteId}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            
-            stickyNotesContainer.appendChild(noteEl);
-        }
-
-        // Add new sticky note
-        addNoteBtn.addEventListener('click', () => {
-            const content = prompt('Enter your note:');
-            if (content && content.trim() !== '') {
-                const colors = ['yellow', 'blue', 'green', 'pink'];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                const note = {
-                    content: content.trim(),
-                    color: randomColor,
-                    createdAt: new Date().toISOString()
-                };
-                
-                // Save to Firebase
-                const notesRef = database.ref('stickyNotes');
-                notesRef.push(note);
-            }
-        });
-
-        // Edit sticky note
-        window.editStickyNote = function(noteId) {
-            const notesRef = database.ref('stickyNotes/' + noteId);
-            notesRef.once('value', (snapshot) => {
-                const note = snapshot.val();
-                const newContent = prompt('Edit your note:', note.content);
-                
-                if (newContent && newContent.trim() !== '') {
-                    notesRef.update({
-                        content: newContent.trim()
-                    });
-                }
-            });
-        };
-
-        // Delete sticky note
-        window.deleteStickyNote = function(noteId) {
-            if (confirm('Are you sure you want to delete this note?')) {
-                database.ref('stickyNotes/' + noteId).remove();
-            }
-        };
-
-        // Open task modal with details
-        function openTaskModal(task, taskId) {
-            currentTaskId = taskId;
-            currentTaskDay = task.day;
-            
-            // Set modal content
-            document.getElementById('modal-task-title').textContent = task.title;
-            
-            const dayDate = new Date(currentWeekStart);
-            dayDate.setDate(currentWeekStart.getDate() + parseInt(task.day));
-            document.getElementById('modal-task-date').textContent = dayDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-            
-            document.getElementById('modal-task-time').textContent = task.time || 'No time set';
-            document.getElementById('modal-task-priority').textContent = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
-            document.getElementById('modal-task-status').textContent = task.completed ? 'Completed' : 'Pending';
-            document.getElementById('modal-task-desc').textContent = task.description || 'No description provided';
-            
-            // Set button text based on current status
-            toggleCompleteBtn.textContent = task.completed ? 'Mark Incomplete' : 'Mark Complete';
-            
-            // Show modal
-            modal.style.display = 'flex';
-        }
-
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        // Toggle task completion
-        toggleCompleteBtn.addEventListener('click', () => {
-            if (currentTaskId) {
-                const weekStartStr = currentWeekStart.toISOString().split('T')[0];
-                const taskRef = database.ref('tasks/' + weekStartStr + '/' + currentTaskId);
-                
-                taskRef.once('value', (snapshot) => {
-                    const task = snapshot.val();
-                    taskRef.update({
-                        completed: !task.completed
-                    });
+            layoutBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const layout = btn.getAttribute('data-layout');
+                    changeLayout(layout);
                     
-                    modal.style.display = 'none';
+                    layoutBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
                 });
-            }
-        });
-
-        // Delete task
-        deleteTaskBtn.addEventListener('click', () => {
-            if (currentTaskId) {
-                const weekStartStr = currentWeekStart.toISOString().split('T')[0];
-                database.ref('tasks/' + weekStartStr + '/' + currentTaskId).remove();
-                modal.style.display = 'none';
-            }
-        });
-
-        // Add new task
-        addTaskBtn.addEventListener('click', () => {
-            const title = document.getElementById('task-title').value;
-            const day = parseInt(document.getElementById('task-day').value);
-            const time = document.getElementById('task-time').value;
-            const priority = document.getElementById('task-priority').value;
-            const description = document.getElementById('task-desc').value;
+            });
             
-            if (!title) {
-                alert('Please enter a task title');
+            searchBtn.addEventListener('click', searchNotes);
+            searchInput.addEventListener('input', searchNotes);
+            
+            // Drag and drop events
+            notesContainer.addEventListener('dragstart', handleDragStart);
+            notesContainer.addEventListener('dragend', handleDragEnd);
+            notesContainer.addEventListener('dragover', handleDragOver);
+            notesContainer.addEventListener('drop', handleDrop);
+        }
+
+        // Create color options
+        function createColorOptions() {
+            noteColors.forEach(colorClass => {
+                const colorOption = document.createElement('div');
+                colorOption.className = `color-option ${colorClass}`;
+                colorOption.setAttribute('data-color', colorClass);
+                colorOption.addEventListener('click', () => {
+                    changeNoteColor(colorClass);
+                });
+                colorOptions.appendChild(colorOption);
+            });
+        }
+
+        // Create a new note
+        function createNewNote() {
+            const newNote = {
+                id: Date.now().toString(),
+                title: 'New Note',
+                content: 'Start typing here...',
+                color: noteColors[Math.floor(Math.random() * noteColors.length)],
+                date: new Date().toLocaleString(),
+                position: notes.length
+            };
+            
+            notes.unshift(newNote);
+            renderNotes();
+            saveNotesToFirebase();
+            showNotification('New note created!');
+        }
+
+        // Change note color
+        function changeNoteColor(colorClass) {
+            if (notes.length === 0) return;
+            
+            // Apply to first note for demo, in real app you'd have a selected note
+            notes[0].color = colorClass;
+            renderNotes();
+            saveNotesToFirebase();
+        }
+
+        // Change layout
+        function changeLayout(layout) {
+            currentLayout = layout;
+            notesContainer.className = `notes-container ${layout}-layout`;
+        }
+
+        // Search notes
+        function searchNotes() {
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm === '') {
+                renderNotes();
                 return;
             }
             
-            const task = {
-                title,
-                day,
-                time,
-                priority,
-                description,
-                completed: false
-            };
+            const filteredNotes = notes.filter(note => 
+                note.title.toLowerCase().includes(searchTerm) || 
+                note.content.toLowerCase().includes(searchTerm)
+            );
             
-            // Save to Firebase
-            const weekStartStr = currentWeekStart.toISOString().split('T')[0];
-            const newTaskRef = database.ref('tasks/' + weekStartStr).push();
-            newTaskRef.set(task);
+            renderNotes(filteredNotes);
+        }
+
+        // Render notes
+        function renderNotes(notesToRender = notes) {
+            notesContainer.innerHTML = '';
             
-            // Clear form
-            document.getElementById('task-title').value = '';
-            document.getElementById('task-desc').value = '';
-        });
+            notesToRender.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = `note ${note.color} new-note`;
+                noteElement.setAttribute('draggable', 'true');
+                noteElement.setAttribute('data-id', note.id);
+                
+                noteElement.innerHTML = `
+                    <div class="note-header">
+                        <input type="text" class="note-title" value="${note.title}" data-id="${note.id}">
+                        <div class="note-actions">
+                            <div class="note-action" data-action="delete" data-id="${note.id}">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                            <div class="note-action" data-action="color" data-id="${note.id}">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea class="note-content" data-id="${note.id}">${note.content}</textarea>
+                    <div class="note-footer">
+                        <div class="note-date">${note.date}</div>
+                        <div class="note-color ${note.color}"></div>
+                    </div>
+                `;
+                
+                notesContainer.appendChild(noteElement);
+            });
+            
+            // Add event listeners to note elements
+            addNoteEventListeners();
+        }
 
-        // Week navigation
-        prevWeekBtn.addEventListener('click', () => {
-            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-            generateCalendar();
-        });
+        // Add event listeners to note elements
+        function addNoteEventListeners() {
+            // Delete note
+            document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const noteId = e.currentTarget.getAttribute('data-id');
+                    deleteNote(noteId);
+                });
+            });
+            
+            // Change note color
+            document.querySelectorAll('[data-action="color"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const noteId = e.currentTarget.getAttribute('data-id');
+                    const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
+                    changeSpecificNoteColor(noteId, randomColor);
+                });
+            });
+            
+            // Update note title
+            document.querySelectorAll('.note-title').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const noteId = e.target.getAttribute('data-id');
+                    updateNote(noteId, 'title', e.target.value);
+                });
+            });
+            
+            // Update note content
+            document.querySelectorAll('.note-content').forEach(textarea => {
+                textarea.addEventListener('change', (e) => {
+                    const noteId = e.target.getAttribute('data-id');
+                    updateNote(noteId, 'content', e.target.value);
+                });
+            });
+        }
 
-        nextWeekBtn.addEventListener('click', () => {
-            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-            generateCalendar();
-        });
+        // Delete note
+        function deleteNote(noteId) {
+            notes = notes.filter(note => note.id !== noteId);
+            renderNotes();
+            saveNotesToFirebase();
+            showNotification('Note deleted!');
+        }
 
-        // Close modal if clicked outside
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+        // Change specific note color
+        function changeSpecificNoteColor(noteId, colorClass) {
+            const note = notes.find(note => note.id === noteId);
+            if (note) {
+                note.color = colorClass;
+                renderNotes();
+                saveNotesToFirebase();
             }
-        });
+        }
 
-        // Initialize calendar
-        generateCalendar();
+        // Update note
+        function updateNote(noteId, field, value) {
+            const note = notes.find(note => note.id === noteId);
+            if (note) {
+                note[field] = value;
+                note.date = new Date().toLocaleString();
+                saveNotesToFirebase();
+            }
+        }
+
+        // Drag and drop handlers
+        function handleDragStart(e) {
+            if (e.target.classList.contains('note')) {
+                draggedNote = e.target;
+                e.target.classList.add('dragging');
+                
+                // Set drag image
+                e.dataTransfer.setDragImage(e.target, 0, 0);
+                e.dataTransfer.effectAllowed = 'move';
+            }
+        }
+
+        function handleDragEnd(e) {
+            if (e.target.classList.contains('note')) {
+                e.target.classList.remove('dragging');
+                draggedNote = null;
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(e.clientY);
+            const draggable = document.querySelector('.dragging');
+            if (draggable && afterElement && afterElement !== draggable.nextSibling) {
+                notesContainer.insertBefore(draggable, afterElement);
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            // Update note positions in the notes array
+            const noteElements = Array.from(notesContainer.querySelectorAll('.note'));
+            notes = noteElements.map((el, index) => {
+                const noteId = el.getAttribute('data-id');
+                const note = notes.find(n => n.id === noteId);
+                note.position = index;
+                return note;
+            });
+            
+            saveNotesToFirebase();
+        }
+
+        function getDragAfterElement(y) {
+            const draggableElements = [...notesContainer.querySelectorAll('.note:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Firebase functions
+        function saveNotesToFirebase() {
+            database.ref('notes').set(notes)
+                .then(() => {
+                    console.log('Notes saved to Firebase');
+                })
+                .catch(error => {
+                    console.error('Error saving notes: ', error);
+                });
+        }
+
+        function loadNotesFromFirebase() {
+            database.ref('notes').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    notes = data;
+                    renderNotes();
+                } else {
+                    // Create a sample note if no notes exist
+                    createSampleNote();
+                }
+            });
+        }
+
+        function syncNotesWithFirebase() {
+            syncNotesBtn.classList.add('pulse');
+            saveNotesToFirebase();
+            setTimeout(() => {
+                syncNotesBtn.classList.remove('pulse');
+                showNotification('Notes synced with cloud!');
+            }, 500);
+        }
+
+        function createSampleNote() {
+            if (notes.length === 0) {
+                const sampleNote = {
+                    id: Date.now().toString(),
+                    title: 'Welcome to Neon Notes!',
+                    content: 'This is a sample note. You can edit, delete, or create new notes. All your notes are saved in the cloud!',
+                    color: 'note-color-1',
+                    date: new Date().toLocaleString(),
+                    position: 0
+                };
+                notes.push(sampleNote);
+                renderNotes();
+                saveNotesToFirebase();
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the app
+        init();
     </script>
 </body>
 </html>
