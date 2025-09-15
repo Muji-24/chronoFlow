@@ -121,8 +121,45 @@
             transition: all 0.3s ease;
         }
 
+        /* Enhanced grid layout for laptop screens */
         .grid-layout {
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        /* Create a more dynamic grid with varied sizes */
+        @media (min-width: 1024px) {
+            .grid-layout {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                grid-auto-rows: minmax(250px, auto);
+            }
+            
+            /* Create varied note sizes for a more interesting layout */
+            .note:nth-child(5n+1) {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            
+            .note:nth-child(5n+2) {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            
+            .note:nth-child(5n+3) {
+                grid-column: span 1;
+                grid-row: span 1;
+                min-height: 280px;
+            }
+            
+            .note:nth-child(5n+4) {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            
+            .note:nth-child(5n+5) {
+                grid-column: span 1;
+                grid-row: span 1;
+                min-height: 300px;
+            }
         }
 
         .list-layout {
@@ -153,6 +190,7 @@
         }
 
         .note:hover {
+            transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
@@ -345,17 +383,25 @@
                 transform: translateX(-50%) scale(0);
                 opacity: 0;
                 transition: all 0.3s ease;
+                pointer-events: none;
             }
             
             .color-options.expanded {
                 transform: translateX(-50%) scale(1);
                 opacity: 1;
+                pointer-events: auto;
             }
             
             .mobile-color-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+            }
+            
+            /* Fix for mobile color buttons */
+            .note-action[data-action="color"] {
+                z-index: 102; /* Higher than color options */
+                position: relative;
             }
         }
 
@@ -528,13 +574,21 @@
             searchInput.addEventListener('input', searchNotes);
             
             // Mobile color picker toggle
-            mobileColorToggle.addEventListener('click', toggleColorPicker);
+            mobileColorToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                colorOptions.classList.toggle('expanded');
+            });
             
             // Close color picker when clicking outside
             document.addEventListener('click', (e) => {
                 if (!colorOptions.contains(e.target) && e.target !== mobileColorToggle) {
                     colorOptions.classList.remove('expanded');
                 }
+            });
+            
+            // Prevent color options from closing when clicking inside
+            colorOptions.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
             
             // Drag and drop events
@@ -544,13 +598,9 @@
             notesContainer.addEventListener('drop', handleDrop);
         }
 
-        // Toggle color picker on mobile
-        function toggleColorPicker() {
-            colorOptions.classList.toggle('expanded');
-        }
-
         // Create color options
         function createColorOptions() {
+            colorOptions.innerHTML = '';
             noteColors.forEach(colorClass => {
                 const colorOption = document.createElement('div');
                 colorOption.className = `color-option ${colorClass}`;
@@ -653,10 +703,12 @@
                 });
             });
             
-            // Change note color
+            // Change note color - FIXED FOR MOBILE
             document.querySelectorAll('[data-action="color"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent event bubbling
                     selectedNoteId = e.currentTarget.getAttribute('data-id');
+                    
                     // On mobile, show the color picker
                     if (window.innerWidth <= 768) {
                         colorOptions.classList.add('expanded');
