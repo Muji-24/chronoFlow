@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neon Notes - Sticky Notes App</title>
+    <link rel="icon" type="image/x-icon" href="icons8-notes-64.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -60,6 +61,7 @@
         .controls {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         button {
@@ -95,6 +97,15 @@
 
         button.sync:hover {
             box-shadow: 0 6px 20px rgba(250, 130, 49, 0.6);
+        }
+
+        .quote-btn {
+            background: linear-gradient(45deg, #a55eea, #8854d0);
+            box-shadow: 0 4px 15px rgba(136, 84, 208, 0.4);
+        }
+
+        .quote-btn:hover {
+            box-shadow: 0 6px 20px rgba(136, 84, 208, 0.6);
         }
 
         .layout-controls {
@@ -358,6 +369,173 @@
             cursor: pointer;
         }
 
+        /* Modal for note preview */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-body {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Quote section */
+        .quote-section {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            max-width: 350px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            z-index: 99;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .quote-section.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .quote-text {
+            font-style: italic;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            text-align: right;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        /* Pet companion */
+        .pet-companion {
+            position: fixed;
+            bottom: 20px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            z-index: 98;
+            transition: all 0.5s ease;
+        }
+
+        .pet {
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%234ecdc4" /><circle cx="35" cy="40" r="5" fill="white" /><circle cx="65" cy="40" r="5" fill="white" /><circle cx="35" cy="40" r="2" fill="black" /><circle cx="65" cy="40" r="2" fill="black" /><path d="M40 65 Q50 75 60 65" stroke="white" stroke-width="2" fill="none" /></svg>') center/contain no-repeat;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pet:hover {
+            transform: scale(1.1);
+        }
+
+        .pet-talk {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 150px;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .pet-talk.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Animation for quotes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quote-animation {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
         @media (max-width: 768px) {
             .notes-container {
                 grid-template-columns: 1fr;
@@ -371,6 +549,7 @@
             .controls {
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
             }
             
             .color-options {
@@ -402,6 +581,20 @@
             .note-action[data-action="color"] {
                 z-index: 102; /* Higher than color options */
                 position: relative;
+            }
+            
+            .quote-section {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                bottom: 100px;
+            }
+            
+            .pet-companion {
+                right: 20px;
+                bottom: 20px;
+                width: 60px;
+                height: 60px;
             }
         }
 
@@ -469,6 +662,9 @@
                 <button class="sync" id="syncNotes">
                     <i class="fas fa-sync-alt"></i> Sync
                 </button>
+                <button class="quote-btn" id="quoteBtn">
+                    <i class="fas fa-quote-right"></i> Motivate Me
+                </button>
             </div>
         </header>
 
@@ -503,6 +699,29 @@
         <div class="notification" id="notification">
             <span id="notificationText"></span>
         </div>
+
+        <!-- Modal for note preview -->
+        <div class="modal-overlay" id="previewModal">
+            <div class="modal-content">
+                <div class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-body" id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- Quote section -->
+        <div class="quote-section" id="quoteSection">
+            <div class="quote-text" id="quoteText"></div>
+            <div class="quote-author" id="quoteAuthor"></div>
+        </div>
+
+        <!-- Pet companion -->
+        <div class="pet-companion" id="petCompanion">
+            <div class="pet" id="pet"></div>
+            <div class="pet-talk" id="petTalk">Hello! Click me for encouragement!</div>
+        </div>
     </div>
 
     <script>
@@ -526,6 +745,7 @@
         const notesContainer = document.getElementById('notesContainer');
         const addNoteBtn = document.getElementById('addNote');
         const syncNotesBtn = document.getElementById('syncNotes');
+        const quoteBtn = document.getElementById('quoteBtn');
         const layoutBtns = document.querySelectorAll('.layout-btn');
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
@@ -533,6 +753,16 @@
         const mobileColorToggle = document.getElementById('mobileColorToggle');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
+        const previewModal = document.getElementById('previewModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const quoteSection = document.getElementById('quoteSection');
+        const quoteText = document.getElementById('quoteText');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+        const petCompanion = document.getElementById('petCompanion');
+        const pet = document.getElementById('pet');
+        const petTalk = document.getElementById('petTalk');
 
         // Note colors
         const noteColors = [
@@ -540,6 +770,54 @@
             'note-color-4', 'note-color-5', 'note-color-6',
             'note-color-7', 'note-color-8', 'note-color-9',
             'note-color-10'
+        ];
+
+        // Motivational quotes
+        const motivationalQuotes = [
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+            { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+            { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+            { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+            { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+            { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" },
+            { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+            { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+            { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+            { text: "Life is 10% what happens to you and 90% how you react to it.", author: "Charles R. Swindoll" },
+            { text: "If you can dream it, you can achieve it.", author: "Zig Ziglar" },
+            { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+            { text: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein" },
+            { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman" },
+            { text: "You must be the change you wish to see in the world.", author: "Mahatma Gandhi" },
+            { text: "What you get by achieving your goals is not as important as what you become by achieving your goals.", author: "Zig Ziglar" },
+            { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+            { text: "I can't change the direction of the wind, but I can adjust my sails to always reach my destination.", author: "Jimmy Dean" },
+            { text: "Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.", author: "Christian D. Larson" },
+            { text: "The harder I work, the more luck I seem to have.", author: "Thomas Jefferson" },
+            { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+            { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+            { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+            { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+            { text: "Do what you can with all you have, wherever you are.", author: "Theodore Roosevelt" },
+            { text: "Your limitation—it's only your imagination.", author: "Unknown" },
+            { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+            { text: "Great things never come from comfort zones.", author: "Unknown" },
+            { text: "Dream it. Wish it. Do it.", author: "Unknown" }
+        ];
+
+        // Pet messages
+        const petMessages = [
+            "You're doing great! Keep it up!",
+            "Your notes are looking awesome!",
+            "I believe in you!",
+            "One note at a time, you've got this!",
+            "Your ideas are amazing!",
+            "You're making progress every day!",
+            "I love how organized you're getting!",
+            "Your creativity is inspiring!",
+            "Don't forget to take breaks too!",
+            "You're a note-taking superstar!"
         ];
 
         // Current state
@@ -553,12 +831,18 @@
             createColorOptions();
             loadNotesFromFirebase();
             setupEventListeners();
+            
+            // Show welcome message after a short delay
+            setTimeout(() => {
+                showNotification('Welcome to Neon Notes! Your notes are automatically saved.');
+            }, 1000);
         }
 
         // Set up event listeners
         function setupEventListeners() {
             addNoteBtn.addEventListener('click', createNewNote);
             syncNotesBtn.addEventListener('click', syncNotesWithFirebase);
+            quoteBtn.addEventListener('click', showRandomQuote);
             
             layoutBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -589,6 +873,23 @@
             // Prevent color options from closing when clicking inside
             colorOptions.addEventListener('click', (e) => {
                 e.stopPropagation();
+            });
+            
+            // Modal close button
+            modalClose.addEventListener('click', () => {
+                previewModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            previewModal.addEventListener('click', (e) => {
+                if (e.target === previewModal) {
+                    previewModal.classList.remove('active');
+                }
+            });
+            
+            // Pet companion interaction
+            pet.addEventListener('click', () => {
+                showPetMessage();
             });
             
             // Drag and drop events
@@ -671,6 +972,9 @@
                     <div class="note-header">
                         <input type="text" class="note-title" value="${note.title}" data-id="${note.id}">
                         <div class="note-actions">
+                            <div class="note-action" data-action="preview" data-id="${note.id}">
+                                <i class="fas fa-expand"></i>
+                            </div>
                             <div class="note-action" data-action="delete" data-id="${note.id}">
                                 <i class="fas fa-trash"></i>
                             </div>
@@ -695,6 +999,14 @@
 
         // Add event listeners to note elements
         function addNoteEventListeners() {
+            // Preview note
+            document.querySelectorAll('[data-action="preview"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const noteId = e.currentTarget.getAttribute('data-id');
+                    showNotePreview(noteId);
+                });
+            });
+            
             // Delete note
             document.querySelectorAll('[data-action="delete"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -737,6 +1049,16 @@
             });
         }
 
+        // Show note preview in modal
+        function showNotePreview(noteId) {
+            const note = notes.find(note => note.id === noteId);
+            if (note) {
+                modalTitle.textContent = note.title;
+                modalBody.textContent = note.content;
+                previewModal.classList.add('active');
+            }
+        }
+
         // Delete note
         function deleteNote(noteId) {
             notes = notes.filter(note => note.id !== noteId);
@@ -765,6 +1087,44 @@
                 note.date = new Date().toLocaleString();
                 saveNotesToFirebase();
             }
+        }
+
+        // Show random motivational quote
+        function showRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+            const quote = motivationalQuotes[randomIndex];
+            
+            quoteText.textContent = `"${quote.text}"`;
+            quoteAuthor.textContent = `- ${quote.author}`;
+            
+            // Add animation class
+            quoteSection.classList.add('show', 'quote-animation');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                quoteSection.classList.remove('quote-animation');
+            }, 500);
+            
+            // Auto hide after 7 seconds
+            setTimeout(() => {
+                quoteSection.classList.remove('show');
+            }, 7000);
+            
+            showNotification('Here\'s some motivation for you!');
+        }
+
+        // Show pet message
+        function showPetMessage() {
+            const randomIndex = Math.floor(Math.random() * petMessages.length);
+            const message = petMessages[randomIndex];
+            
+            petTalk.textContent = message;
+            petTalk.classList.add('show');
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                petTalk.classList.remove('show');
+            }, 3000);
         }
 
         // Drag and drop handlers
@@ -862,7 +1222,7 @@
                 const sampleNote = {
                     id: Date.now().toString(),
                     title: 'Welcome to Neon Notes!',
-                    content: 'This is a sample note. You can edit, delete, or create new notes. All your notes are saved in the cloud!',
+                    content: 'This is a sample note. You can edit, delete, or create new notes. All your notes are saved in the cloud!\n\nTry clicking the preview icon (↗) to see this note in full screen!\n\nClick the palette icon to change colors.\n\nClick "Motivate Me" for inspirational quotes!',
                     color: 'note-color-1',
                     date: new Date().toLocaleString(),
                     position: 0
