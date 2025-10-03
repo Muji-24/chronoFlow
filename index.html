@@ -92,15 +92,6 @@
             box-shadow: 0 6px 20px rgba(32, 191, 107, 0.6);
         }
 
-        button.sync {
-            background: linear-gradient(45deg, #fd9644, #fa8231);
-            box-shadow: 0 4px 15px rgba(250, 130, 49, 0.4);
-        }
-
-        button.sync:hover {
-            box-shadow: 0 6px 20px rgba(250, 130, 49, 0.6);
-        }
-
         .quote-btn {
             background: linear-gradient(45deg, #a55eea, #8854d0);
             box-shadow: 0 4px 15px rgba(136, 84, 208, 0.4);
@@ -110,13 +101,13 @@
             box-shadow: 0 6px 20px rgba(136, 84, 208, 0.6);
         }
 
-        .canvas-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        .folder-btn {
+            background: linear-gradient(45deg, #fd9644, #fa8231);
+            box-shadow: 0 4px 15px rgba(250, 130, 49, 0.4);
         }
 
-        .canvas-btn:hover {
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        .folder-btn:hover {
+            box-shadow: 0 6px 20px rgba(250, 130, 49, 0.6);
         }
 
         .layout-controls {
@@ -488,230 +479,44 @@
             opacity: 0.8;
         }
 
-        /* Canvas Modal Styles */
-        .canvas-modal {
+        /* Folder sidebar */
+        .sidebar {
             position: fixed;
-            top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            top: 0;
+            height: 100vh;
+            width: 300px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            overflow-y: auto;
+            padding: 20px;
         }
 
-        .canvas-modal.active {
-            opacity: 1;
-            visibility: visible;
+        .sidebar.active {
+            transform: translateX(0);
         }
 
-        .canvas-container {
-            width: 95%;
-            height: 95%;
-            background: #1a1a2e;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 50px rgba(255, 107, 107, 0.3);
-            overflow: hidden;
-        }
-
-        .canvas-header {
+        .sidebar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .canvas-title {
+        .sidebar-title {
             font-size: 1.5rem;
             font-weight: bold;
-            background: transparent;
-            border: none;
-            color: white;
-            width: 300px;
-            padding: 5px 10px;
-            border-radius: 5px;
         }
 
-        .canvas-title:focus {
-            outline: 2px solid #ff6b6b;
-        }
-
-        .canvas-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .canvas-control-btn {
-            padding: 8px 15px;
-            border-radius: 20px;
+        .sidebar-close {
             background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .canvas-control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .canvas-control-btn.save {
-            background: linear-gradient(45deg, #26de81, #20bf6b);
-        }
-
-        .canvas-control-btn.clear {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-        }
-
-        .canvas-control-btn.close {
-            background: linear-gradient(45deg, #a55eea, #8854d0);
-        }
-
-        .canvas-tools {
-            display: flex;
-            gap: 10px;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .tool-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .tool-btn.active {
-            background: #ff6b6b;
-            transform: scale(1.1);
-        }
-
-        .tool-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .color-picker {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .color-btn {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .color-btn.active {
-            transform: scale(1.2);
-            border: 2px solid white;
-        }
-
-        .brush-size {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-        }
-
-        .brush-size input {
-            width: 100px;
-        }
-
-        .canvas-area {
-            flex-grow: 1;
-            overflow: hidden;
-            position: relative;
-            touch-action: none;
-        }
-
-        #drawingCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: crosshair;
-            touch-action: none;
-        }
-
-        /* Canvas List Modal */
-        .canvas-list-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .canvas-list-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .canvas-list-container {
-            width: 80%;
-            max-width: 800px;
-            height: 80%;
-            background: #1a1a2e;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 50px rgba(255, 107, 107, 0.3);
-            overflow: hidden;
-        }
-
-        .canvas-list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .canvas-list-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
-        .canvas-list-close {
-            background: rgba(255, 255, 255, 0.1);
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -720,80 +525,147 @@
             transition: all 0.2s ease;
         }
 
-        .canvas-list-close:hover {
+        .sidebar-close:hover {
             transform: rotate(90deg);
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .canvas-list-body {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
+        .folder-list {
+            margin-bottom: 30px;
         }
 
-        .canvas-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .canvas-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .folder-item {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .folder-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .folder-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .folder-info {
+            display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .canvas-item:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        .folder-icon {
+            color: #ff6b6b;
         }
 
-        .canvas-thumbnail {
-            width: 100%;
-            height: 120px;
-            background: #2d2d4d;
-            border-radius: 5px;
+        .folder-name {
+            font-weight: bold;
+        }
+
+        .folder-actions {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .folder-item:hover .folder-actions {
+            opacity: 1;
+        }
+
+        .folder-action {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .canvas-thumbnail canvas {
-            max-width: 100%;
-            max-height: 100%;
+        .folder-action:hover {
+            transform: scale(1.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .canvas-item-name {
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .canvas-item-date {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .no-canvases {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            opacity: 0.7;
-        }
-
-        .canvas-list-footer {
-            padding: 20px;
+        .add-folder-form {
             display: flex;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .add-folder-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .add-folder-btn {
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .folder-notes {
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .folder-notes-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .folder-note-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .folder-note-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .folder-note-name {
+            font-size: 0.9rem;
+        }
+
+        .remove-note-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+        }
+
+        .remove-note-btn:hover {
+            background: rgba(255, 107, 107, 0.4);
+            transform: scale(1.2);
         }
 
         /* Mobile-specific styles */
@@ -866,92 +738,8 @@
                 bottom: 100px;
             }
             
-            /* Mobile canvas styles */
-            .canvas-container {
-                width: 100%;
-                height: 100%;
-                border-radius: 0;
-            }
-            
-            .canvas-header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 10px 15px;
-            }
-            
-            .canvas-title {
-                width: 100%;
-                font-size: 1.2rem;
-            }
-            
-            .canvas-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .canvas-control-btn {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-                flex: 1;
-                margin: 0 5px;
-                text-align: center;
-            }
-            
-            .canvas-tools {
-                padding: 10px 15px;
-                justify-content: center;
-            }
-            
-            .tool-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
-            
-            .color-picker {
-                justify-content: center;
-            }
-            
-            .brush-size {
-                flex: 1;
-                justify-content: center;
-                min-width: 150px;
-            }
-            
-            .brush-size input {
-                width: 80px;
-            }
-            
-            /* Mobile canvas list styles */
-            .canvas-list-container {
-                width: 95%;
-                height: 95%;
-                border-radius: 10px;
-            }
-            
-            .canvas-list-header {
-                padding: 15px;
-            }
-            
-            .canvas-list-title {
-                font-size: 1.5rem;
-            }
-            
-            .canvas-list {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
-            }
-            
-            .canvas-item {
-                padding: 10px;
-            }
-            
-            .canvas-thumbnail {
-                height: 100px;
-            }
-            
-            .canvas-list-footer {
-                padding: 15px;
+            .sidebar {
+                width: 85%;
             }
             
             .modal-content {
@@ -976,25 +764,6 @@
                 padding: 8px 12px;
                 font-size: 0.8rem;
             }
-            
-            .canvas-control-btn {
-                padding: 8px 10px;
-                font-size: 0.8rem;
-            }
-            
-            .tool-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            
-            .canvas-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .brush-size {
-                min-width: 120px;
-            }
         }
 
         /* Animation for new notes */
@@ -1011,17 +780,6 @@
 
         .new-note {
             animation: noteAppear 0.5s ease;
-        }
-
-        /* Pulse animation for sync */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .pulse {
-            animation: pulse 0.5s ease;
         }
 
         /* Drag and drop styles */
@@ -1074,11 +832,8 @@
                 <button class="add-note" id="addNote">
                     <i class="fas fa-plus"></i> Add Note
                 </button>
-                <button class="canvas-btn" id="canvasBtn">
-                    <i class="fas fa-paint-brush"></i> Canvas
-                </button>
-                <button class="sync" id="syncNotes">
-                    <i class="fas fa-sync-alt"></i> Sync
+                <button class="folder-btn" id="folderBtn">
+                    <i class="fas fa-folder"></i> Folders
                 </button>
                 <button class="quote-btn" id="quoteBtn">
                     <i class="fas fa-quote-right"></i> Motivate Me
@@ -1135,71 +890,29 @@
             <div class="quote-author" id="quoteAuthor"></div>
         </div>
 
-        <!-- Canvas Modal -->
-        <div class="canvas-modal" id="canvasModal">
-            <div class="canvas-container">
-                <div class="canvas-header">
-                    <input type="text" class="canvas-title" id="canvasTitle" placeholder="Untitled Canvas" value="Untitled Canvas">
-                    <div class="canvas-controls">
-                        <button class="canvas-control-btn save" id="saveCanvas">
-                            <i class="fas fa-save"></i> Save
-                        </button>
-                        <button class="canvas-control-btn clear" id="clearCanvas">
-                            <i class="fas fa-trash"></i> Clear
-                        </button>
-                        <button class="canvas-control-btn close" id="closeCanvas">
-                            <i class="fas fa-times"></i> Close
-                        </button>
-                    </div>
-                </div>
-                <div class="canvas-tools">
-                    <div class="tool-btn active" data-tool="pen" title="Pen">
-                        <i class="fas fa-pen"></i>
-                    </div>
-                    <div class="tool-btn" data-tool="eraser" title="Eraser">
-                        <i class="fas fa-eraser"></i>
-                    </div>
-                    <div class="color-picker">
-                        <div class="color-btn active" style="background: #ff6b6b;" data-color="#ff6b6b"></div>
-                        <div class="color-btn" style="background: #4ecdc4;" data-color="#4ecdc4"></div>
-                        <div class="color-btn" style="background: #45aaf2;" data-color="#45aaf2"></div>
-                        <div class="color-btn" style="background: #a55eea;" data-color="#a55eea"></div>
-                        <div class="color-btn" style="background: #26de81;" data-color="#26de81"></div>
-                        <div class="color-btn" style="background: #f7b731;" data-color="#f7b731"></div>
-                        <div class="color-btn" style="background: #ffffff;" data-color="#ffffff"></div>
-                        <div class="color-btn" style="background: #000000;" data-color="#000000"></div>
-                    </div>
-                    <div class="brush-size">
-                        <span>Size:</span>
-                        <input type="range" id="brushSize" min="1" max="50" value="5">
-                        <span id="brushSizeValue">5</span>
-                    </div>
-                </div>
-                <div class="canvas-area">
-                    <canvas id="drawingCanvas"></canvas>
+        <!-- Folder Sidebar -->
+        <div class="sidebar" id="folderSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Folders</div>
+                <div class="sidebar-close" id="closeSidebar">
+                    <i class="fas fa-times"></i>
                 </div>
             </div>
-        </div>
-
-        <!-- Canvas List Modal -->
-        <div class="canvas-list-modal" id="canvasListModal">
-            <div class="canvas-list-container">
-                <div class="canvas-list-header">
-                    <div class="canvas-list-title">My Canvases</div>
-                    <div class="canvas-list-close" id="closeCanvasList">
-                        <i class="fas fa-times"></i>
-                    </div>
-                </div>
-                <div class="canvas-list-body">
-                    <div class="canvas-list" id="canvasList">
-                        <!-- Canvas items will be added here dynamically -->
-                    </div>
-                </div>
-                <div class="canvas-list-footer">
-                    <button class="canvas-control-btn" id="createNewCanvas">
-                        <i class="fas fa-plus"></i> Create New Canvas
-                    </button>
-                </div>
+            
+            <div class="folder-list" id="folderList">
+                <!-- Folders will be added here dynamically -->
+            </div>
+            
+            <div class="add-folder-form">
+                <input type="text" class="add-folder-input" id="folderNameInput" placeholder="New folder name">
+                <button class="add-folder-btn" id="addFolderBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div class="folder-notes" id="folderNotes">
+                <div class="folder-notes-title">Notes in this folder</div>
+                <!-- Notes in selected folder will be added here dynamically -->
             </div>
         </div>
     </div>
@@ -1224,8 +937,7 @@
         // DOM elements
         const notesContainer = document.getElementById('notesContainer');
         const addNoteBtn = document.getElementById('addNote');
-        const canvasBtn = document.getElementById('canvasBtn');
-        const syncNotesBtn = document.getElementById('syncNotes');
+        const folderBtn = document.getElementById('folderBtn');
         const quoteBtn = document.getElementById('quoteBtn');
         const layoutBtns = document.querySelectorAll('.layout-btn');
         const searchInput = document.getElementById('searchInput');
@@ -1242,21 +954,13 @@
         const quoteText = document.getElementById('quoteText');
         const quoteAuthor = document.getElementById('quoteAuthor');
         
-        // Canvas elements
-        const canvasModal = document.getElementById('canvasModal');
-        const canvasListModal = document.getElementById('canvasListModal');
-        const drawingCanvas = document.getElementById('drawingCanvas');
-        const canvasTitle = document.getElementById('canvasTitle');
-        const saveCanvasBtn = document.getElementById('saveCanvas');
-        const clearCanvasBtn = document.getElementById('clearCanvas');
-        const closeCanvasBtn = document.getElementById('closeCanvas');
-        const closeCanvasListBtn = document.getElementById('closeCanvasList');
-        const createNewCanvasBtn = document.getElementById('createNewCanvas');
-        const canvasList = document.getElementById('canvasList');
-        const toolBtns = document.querySelectorAll('.tool-btn');
-        const colorBtns = document.querySelectorAll('.color-btn');
-        const brushSize = document.getElementById('brushSize');
-        const brushSizeValue = document.getElementById('brushSizeValue');
+        // Folder elements
+        const folderSidebar = document.getElementById('folderSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const folderList = document.getElementById('folderList');
+        const folderNameInput = document.getElementById('folderNameInput');
+        const addFolderBtn = document.getElementById('addFolderBtn');
+        const folderNotes = document.getElementById('folderNotes');
 
         // Note colors
         const noteColors = [
@@ -1283,27 +987,17 @@
         // Current state
         let currentLayout = 'grid';
         let notes = [];
-        let canvases = [];
+        let folders = [];
         let draggedNote = null;
         let selectedNoteId = null;
-        
-        // Canvas state
-        let currentCanvas = null;
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
-        let currentTool = 'pen';
-        let currentColor = '#ff6b6b';
-        let currentBrushSize = 5;
-        let canvasContext = null;
+        let selectedFolderId = null;
 
         // Initialize the app
         function init() {
             createColorOptions();
             loadNotesFromFirebase();
-            loadCanvasesFromFirebase();
+            loadFoldersFromFirebase();
             setupEventListeners();
-            setupCanvas();
             
             // Show welcome message after a short delay
             setTimeout(() => {
@@ -1314,8 +1008,7 @@
         // Set up event listeners
         function setupEventListeners() {
             addNoteBtn.addEventListener('click', createNewNote);
-            canvasBtn.addEventListener('click', showCanvasList);
-            syncNotesBtn.addEventListener('click', syncNotesWithFirebase);
+            folderBtn.addEventListener('click', toggleFolderSidebar);
             quoteBtn.addEventListener('click', showRandomQuote);
             
             layoutBtns.forEach(btn => {
@@ -1361,35 +1054,17 @@
                 }
             });
             
-            // Canvas event listeners
-            saveCanvasBtn.addEventListener('click', saveCanvas);
-            clearCanvasBtn.addEventListener('click', clearCanvas);
-            closeCanvasBtn.addEventListener('click', closeCanvas);
-            closeCanvasListBtn.addEventListener('click', closeCanvasList);
-            createNewCanvasBtn.addEventListener('click', createNewCanvas);
+            // Folder sidebar close button
+            closeSidebar.addEventListener('click', toggleFolderSidebar);
             
-            // Canvas tool buttons
-            toolBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    toolBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentTool = btn.getAttribute('data-tool');
-                });
-            });
+            // Add folder button
+            addFolderBtn.addEventListener('click', addNewFolder);
             
-            // Color buttons
-            colorBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    colorBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentColor = btn.getAttribute('data-color');
-                });
-            });
-            
-            // Brush size
-            brushSize.addEventListener('input', () => {
-                currentBrushSize = brushSize.value;
-                brushSizeValue.textContent = currentBrushSize;
+            // Enter key to add folder
+            folderNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addNewFolder();
+                }
             });
             
             // Drag and drop events
@@ -1397,212 +1072,6 @@
             notesContainer.addEventListener('dragend', handleDragEnd);
             notesContainer.addEventListener('dragover', handleDragOver);
             notesContainer.addEventListener('drop', handleDrop);
-        }
-
-        // Setup canvas for drawing
-        function setupCanvas() {
-            canvasContext = drawingCanvas.getContext('2d');
-            
-            // Set canvas size to match its container
-            function resizeCanvas() {
-                const container = drawingCanvas.parentElement;
-                drawingCanvas.width = container.clientWidth;
-                drawingCanvas.height = container.clientHeight;
-                
-                // Redraw current canvas if it exists
-                if (currentCanvas && currentCanvas.data) {
-                    const img = new Image();
-                    img.onload = function() {
-                        canvasContext.drawImage(img, 0, 0);
-                    };
-                    img.src = currentCanvas.data;
-                }
-            }
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            // Drawing event listeners
-            drawingCanvas.addEventListener('mousedown', startDrawing);
-            drawingCanvas.addEventListener('mousemove', draw);
-            drawingCanvas.addEventListener('mouseup', stopDrawing);
-            drawingCanvas.addEventListener('mouseout', stopDrawing);
-            
-            // Touch events for mobile
-            drawingCanvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-            drawingCanvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-            drawingCanvas.addEventListener('touchend', stopDrawing);
-        }
-
-        // Canvas drawing functions
-        function startDrawing(e) {
-            isDrawing = true;
-            const pos = getMousePos(e);
-            [lastX, lastY] = [pos.x, pos.y];
-            
-            // Prevent default to avoid scrolling on touch devices
-            if (e.type === 'touchstart') {
-                e.preventDefault();
-            }
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            
-            const pos = getMousePos(e);
-            canvasContext.lineJoin = 'round';
-            canvasContext.lineCap = 'round';
-            
-            if (currentTool === 'pen') {
-                canvasContext.strokeStyle = currentColor;
-                canvasContext.lineWidth = currentBrushSize;
-            } else if (currentTool === 'eraser') {
-                canvasContext.strokeStyle = '#1a1a2e';
-                canvasContext.lineWidth = currentBrushSize * 2;
-            }
-            
-            canvasContext.beginPath();
-            canvasContext.moveTo(lastX, lastY);
-            canvasContext.lineTo(pos.x, pos.y);
-            canvasContext.stroke();
-            
-            [lastX, lastY] = [pos.x, pos.y];
-            
-            // Prevent default to avoid scrolling on touch devices
-            if (e.type === 'touchmove') {
-                e.preventDefault();
-            }
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function getMousePos(e) {
-            const rect = drawingCanvas.getBoundingClientRect();
-            let x, y;
-            
-            if (e.type.includes('touch')) {
-                x = e.touches[0].clientX - rect.left;
-                y = e.touches[0].clientY - rect.top;
-            } else {
-                x = e.clientX - rect.left;
-                y = e.clientY - rect.top;
-            }
-            
-            return { x, y };
-        }
-
-        function handleTouchStart(e) {
-            startDrawing(e.touches[0]);
-        }
-
-        function handleTouchMove(e) {
-            draw(e.touches[0]);
-        }
-
-        function clearCanvas() {
-            if (confirm('Are you sure you want to clear the canvas?')) {
-                canvasContext.fillStyle = '#1a1a2e';
-                canvasContext.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            }
-        }
-
-        function saveCanvas() {
-            if (!currentCanvas) {
-                currentCanvas = {
-                    id: Date.now().toString(),
-                    name: canvasTitle.value,
-                    date: new Date().toLocaleString(),
-                    data: drawingCanvas.toDataURL()
-                };
-                canvases.push(currentCanvas);
-            } else {
-                currentCanvas.name = canvasTitle.value;
-                currentCanvas.date = new Date().toLocaleString();
-                currentCanvas.data = drawingCanvas.toDataURL();
-            }
-            
-            saveCanvasesToFirebase();
-            showNotification('Canvas saved successfully!');
-            closeCanvas();
-        }
-
-        function createNewCanvas() {
-            currentCanvas = null;
-            canvasTitle.value = 'Untitled Canvas';
-            canvasContext.fillStyle = '#1a1a2e';
-            canvasContext.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            canvasModal.classList.add('active');
-            canvasListModal.classList.remove('active');
-        }
-
-        function openCanvas(canvasId) {
-            const canvas = canvases.find(c => c.id === canvasId);
-            if (canvas) {
-                currentCanvas = canvas;
-                canvasTitle.value = canvas.name;
-                
-                const img = new Image();
-                img.onload = function() {
-                    canvasContext.drawImage(img, 0, 0);
-                };
-                img.src = canvas.data;
-                
-                canvasModal.classList.add('active');
-                canvasListModal.classList.remove('active');
-            }
-        }
-
-        function closeCanvas() {
-            canvasModal.classList.remove('active');
-        }
-
-        function showCanvasList() {
-            renderCanvasList();
-            canvasListModal.classList.add('active');
-        }
-
-        function closeCanvasList() {
-            canvasListModal.classList.remove('active');
-        }
-
-        function renderCanvasList() {
-            canvasList.innerHTML = '';
-            
-            if (canvases.length === 0) {
-                canvasList.innerHTML = '<div class="no-canvases">No canvases yet. Create your first one!</div>';
-                return;
-            }
-            
-            canvases.forEach(canvas => {
-                const canvasItem = document.createElement('div');
-                canvasItem.className = 'canvas-item';
-                canvasItem.setAttribute('data-id', canvas.id);
-                
-                canvasItem.innerHTML = `
-                    <div class="canvas-thumbnail">
-                        <canvas width="200" height="120"></canvas>
-                    </div>
-                    <div class="canvas-item-name">${canvas.name}</div>
-                    <div class="canvas-item-date">${canvas.date}</div>
-                `;
-                
-                // Create thumbnail
-                const thumbnailCanvas = canvasItem.querySelector('canvas');
-                const thumbnailCtx = thumbnailCanvas.getContext('2d');
-                const img = new Image();
-                img.onload = function() {
-                    thumbnailCtx.drawImage(img, 0, 0, 200, 120);
-                };
-                img.src = canvas.data;
-                
-                canvasItem.addEventListener('click', () => {
-                    openCanvas(canvas.id);
-                });
-                
-                canvasList.appendChild(canvasItem);
-            });
         }
 
         // Create color options
@@ -1633,7 +1102,8 @@
                 content: 'Start typing here...',
                 color: noteColors[Math.floor(Math.random() * noteColors.length)],
                 date: new Date().toLocaleString(),
-                position: notes.length
+                position: notes.length,
+                folderId: null
             };
             
             notes.unshift(newNote);
@@ -1668,6 +1138,11 @@
         function renderNotes(notesToRender = notes) {
             notesContainer.innerHTML = '';
             
+            // If a folder is selected, filter notes by folder
+            if (selectedFolderId) {
+                notesToRender = notesToRender.filter(note => note.folderId === selectedFolderId);
+            }
+            
             notesToRender.forEach(note => {
                 const noteElement = document.createElement('div');
                 noteElement.className = `note ${note.color} new-note`;
@@ -1686,6 +1161,9 @@
                             </div>
                             <div class="note-action" data-action="color" data-id="${note.id}">
                                 <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="note-action" data-action="folder" data-id="${note.id}">
+                                <i class="fas fa-folder${note.folderId ? '-open' : ''}"></i>
                             </div>
                         </div>
                     </div>
@@ -1735,6 +1213,14 @@
                         const randomColor = noteColors[Math.floor(Math.random() * noteColors.length)];
                         changeSpecificNoteColor(selectedNoteId, randomColor);
                     }
+                });
+            });
+            
+            // Add note to folder
+            document.querySelectorAll('[data-action="folder"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const noteId = e.currentTarget.getAttribute('data-id');
+                    showFolderSelection(noteId);
                 });
             });
             
@@ -1876,6 +1362,275 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
+        // Folder functions
+        function toggleFolderSidebar() {
+            folderSidebar.classList.toggle('active');
+            if (folderSidebar.classList.contains('active')) {
+                renderFolderList();
+            }
+        }
+
+        function addNewFolder() {
+            const folderName = folderNameInput.value.trim();
+            if (!folderName) {
+                showNotification('Please enter a folder name');
+                return;
+            }
+            
+            const newFolder = {
+                id: Date.now().toString(),
+                name: folderName,
+                date: new Date().toLocaleString()
+            };
+            
+            folders.push(newFolder);
+            folderNameInput.value = '';
+            renderFolderList();
+            saveFoldersToFirebase();
+            showNotification('Folder created!');
+        }
+
+        function renderFolderList() {
+            folderList.innerHTML = '';
+            
+            if (folders.length === 0) {
+                folderList.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 20px;">No folders yet. Create your first one!</div>';
+                return;
+            }
+            
+            folders.forEach(folder => {
+                const folderItem = document.createElement('div');
+                folderItem.className = `folder-item ${selectedFolderId === folder.id ? 'active' : ''}`;
+                folderItem.setAttribute('data-id', folder.id);
+                
+                const notesInFolder = notes.filter(note => note.folderId === folder.id);
+                
+                folderItem.innerHTML = `
+                    <div class="folder-info">
+                        <i class="fas fa-folder folder-icon"></i>
+                        <div class="folder-name">${folder.name}</div>
+                        <div class="folder-note-count">(${notesInFolder.length})</div>
+                    </div>
+                    <div class="folder-actions">
+                        <div class="folder-action" data-action="select" data-id="${folder.id}">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="folder-action" data-action="delete" data-id="${folder.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+                `;
+                
+                folderList.appendChild(folderItem);
+            });
+            
+            // Add event listeners to folder items
+            addFolderEventListeners();
+        }
+
+        function addFolderEventListeners() {
+            // Select folder
+            document.querySelectorAll('[data-action="select"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const folderId = e.currentTarget.getAttribute('data-id');
+                    selectFolder(folderId);
+                });
+            });
+            
+            // Delete folder
+            document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const folderId = e.currentTarget.getAttribute('data-id');
+                    deleteFolder(folderId);
+                });
+            });
+            
+            // Select folder by clicking on the folder item
+            document.querySelectorAll('.folder-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (!e.target.closest('.folder-actions')) {
+                        const folderId = item.getAttribute('data-id');
+                        selectFolder(folderId);
+                    }
+                });
+            });
+        }
+
+        function selectFolder(folderId) {
+            selectedFolderId = folderId;
+            renderNotes();
+            renderFolderNotes();
+            
+            // Update folder list to show active folder
+            document.querySelectorAll('.folder-item').forEach(item => {
+                if (item.getAttribute('data-id') === folderId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            showNotification(`Viewing notes in "${folders.find(f => f.id === folderId).name}"`);
+        }
+
+        function renderFolderNotes() {
+            folderNotes.innerHTML = '';
+            
+            if (!selectedFolderId) {
+                folderNotes.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 10px;">Select a folder to view its notes</div>';
+                return;
+            }
+            
+            const folder = folders.find(f => f.id === selectedFolderId);
+            const notesInFolder = notes.filter(note => note.folderId === selectedFolderId);
+            
+            folderNotes.innerHTML = `
+                <div class="folder-notes-title">Notes in "${folder.name}"</div>
+            `;
+            
+            if (notesInFolder.length === 0) {
+                folderNotes.innerHTML += '<div style="text-align: center; opacity: 0.7; padding: 10px;">No notes in this folder</div>';
+                return;
+            }
+            
+            notesInFolder.forEach(note => {
+                const noteItem = document.createElement('div');
+                noteItem.className = 'folder-note-item';
+                noteItem.setAttribute('data-id', note.id);
+                
+                noteItem.innerHTML = `
+                    <div class="folder-note-name">${note.title}</div>
+                    <div class="remove-note-btn" data-action="remove-from-folder" data-id="${note.id}">
+                        <i class="fas fa-times"></i>
+                    </div>
+                `;
+                
+                folderNotes.appendChild(noteItem);
+            });
+            
+            // Add event listeners to remove note from folder
+            document.querySelectorAll('[data-action="remove-from-folder"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const noteId = e.currentTarget.getAttribute('data-id');
+                    removeNoteFromFolder(noteId);
+                });
+            });
+        }
+
+        function removeNoteFromFolder(noteId) {
+            const note = notes.find(note => note.id === noteId);
+            if (note) {
+                note.folderId = null;
+                renderNotes();
+                renderFolderNotes();
+                saveNotesToFirebase();
+                showNotification('Note removed from folder');
+            }
+        }
+
+        function deleteFolder(folderId) {
+            const folder = folders.find(f => f.id === folderId);
+            if (!folder) return;
+            
+            if (confirm(`Are you sure you want to delete the folder "${folder.name}"? Notes in this folder will not be deleted.`)) {
+                // Remove folder from notes
+                notes.forEach(note => {
+                    if (note.folderId === folderId) {
+                        note.folderId = null;
+                    }
+                });
+                
+                // Remove folder from folders array
+                folders = folders.filter(f => f.id !== folderId);
+                
+                // If the deleted folder was selected, clear selection
+                if (selectedFolderId === folderId) {
+                    selectedFolderId = null;
+                    renderNotes();
+                }
+                
+                renderFolderList();
+                saveFoldersToFirebase();
+                saveNotesToFirebase();
+                showNotification('Folder deleted');
+            }
+        }
+
+        function showFolderSelection(noteId) {
+            selectedNoteId = noteId;
+            
+            // Create a simple folder selection modal
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-close" id="closeFolderModal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <h2 class="modal-title">Add Note to Folder</h2>
+                    <div class="folder-selection" id="folderSelection">
+                        <div class="folder-option" data-folder-id="null">
+                            <i class="fas fa-times"></i> No Folder
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Populate folder options
+            const folderSelection = document.getElementById('folderSelection');
+            folders.forEach(folder => {
+                const folderOption = document.createElement('div');
+                folderOption.className = 'folder-option';
+                folderOption.setAttribute('data-folder-id', folder.id);
+                folderOption.innerHTML = `
+                    <i class="fas fa-folder"></i> ${folder.name}
+                `;
+                folderSelection.appendChild(folderOption);
+            });
+            
+            // Add event listeners to folder options
+            document.querySelectorAll('.folder-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const folderId = option.getAttribute('data-folder-id');
+                    addNoteToFolder(selectedNoteId, folderId === 'null' ? null : folderId);
+                    document.body.removeChild(modal);
+                });
+            });
+            
+            // Close modal
+            document.getElementById('closeFolderModal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+
+        function addNoteToFolder(noteId, folderId) {
+            const note = notes.find(note => note.id === noteId);
+            if (note) {
+                note.folderId = folderId;
+                renderNotes();
+                saveNotesToFirebase();
+                
+                if (folderId) {
+                    const folder = folders.find(f => f.id === folderId);
+                    showNotification(`Note added to "${folder.name}"`);
+                } else {
+                    showNotification('Note removed from folder');
+                }
+            }
+        }
+
         // Firebase functions
         function saveNotesToFirebase() {
             database.ref('notes').set(notes)
@@ -1900,33 +1655,23 @@
             });
         }
 
-        function saveCanvasesToFirebase() {
-            database.ref('canvases').set(canvases)
+        function saveFoldersToFirebase() {
+            database.ref('folders').set(folders)
                 .then(() => {
-                    console.log('Canvases saved to Firebase');
+                    console.log('Folders saved to Firebase');
                 })
                 .catch(error => {
-                    console.error('Error saving canvases: ', error);
+                    console.error('Error saving folders: ', error);
                 });
         }
 
-        function loadCanvasesFromFirebase() {
-            database.ref('canvases').on('value', (snapshot) => {
+        function loadFoldersFromFirebase() {
+            database.ref('folders').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    canvases = data;
+                    folders = data;
                 }
             });
-        }
-
-        function syncNotesWithFirebase() {
-            syncNotesBtn.classList.add('pulse');
-            saveNotesToFirebase();
-            saveCanvasesToFirebase();
-            setTimeout(() => {
-                syncNotesBtn.classList.remove('pulse');
-                showNotification('Notes and canvases synced with cloud!');
-            }, 500);
         }
 
         function createSampleNote() {
@@ -1934,10 +1679,11 @@
                 const sampleNote = {
                     id: Date.now().toString(),
                     title: 'Welcome to Neon Notes!',
-                    content: 'This is a sample note. You can edit, delete, or create new notes. All your notes are saved in the cloud!\n\nTry clicking the preview icon (↗) to see this note in full screen!\n\nClick the palette icon to change colors.\n\nClick "Canvas" to create drawings!',
+                    content: 'This is a sample note. You can edit, delete, or create new notes. All your notes are saved in the cloud!\n\nTry clicking the preview icon (↗) to see this note in full screen!\n\nClick the palette icon to change colors.\n\nClick the folder icon to organize your notes into folders!',
                     color: 'note-color-1',
                     date: new Date().toLocaleString(),
-                    position: 0
+                    position: 0,
+                    folderId: null
                 };
                 notes.push(sampleNote);
                 renderNotes();
